@@ -109,10 +109,13 @@ jobs:
         run: |
           ARCHIVE="WeKnora-lite_${{ steps.ver.outputs.version }}_${{ matrix.goos }}_${{ matrix.goarch }}"
           mkdir -p "${ARCHIVE}/web"
+          mkdir -p "${ARCHIVE}/dict"
+          cp -r "$(go env GOPATH)/pkg/mod/github.com/yanyiwu/gojieba@v1.4.7/deps/cppjieba/dict/." "${ARCHIVE}/dict/"
           cp WeKnora-lite "${ARCHIVE}/"
           bash ./scripts/copy-licenses.sh "${ARCHIVE}"
           cp -r web/* "${ARCHIVE}/web/"
           cp .env.lite.example "${ARCHIVE}/"
+          echo "JIEBA_DICT_DIR=./dict" >> "${ARCHIVE}/.env.lite.example"
           cp docs/LITE.md "${ARCHIVE}/README.md"
           if [ -d config ]; then
             cp -r config "${ARCHIVE}/config"
